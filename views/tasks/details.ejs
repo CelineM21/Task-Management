@@ -1,0 +1,83 @@
+<div class="page-header">
+  <div>
+    <h1 class="page-title"><%= task.title %></h1>
+    <p class="page-subtitle">Task Details</p>
+  </div>
+  <div style="display:flex;gap:.75rem;">
+    <%
+      const isOwner = task.assignedUser && task.assignedUser._id.toString() === locals.currentUser.id;
+      const canEdit = locals.currentUser.role !== 'user' || isOwner;
+    %>
+    <% if (canEdit) { %>
+    <a href="/tasks/<%= task._id %>/edit" class="btn btn-warning">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/></svg>
+      Edit Task
+    </a>
+    <% } %>
+    <a href="/tasks" class="btn btn-secondary">← Back</a>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;align-items:start;">
+  <div class="card">
+    <div class="card-header"><h3 class="card-title">Task Information</h3></div>
+    <div class="card-body">
+      <div class="detail-grid">
+        <div class="detail-item">
+          <div class="detail-label">Status</div>
+          <div class="detail-value"><span class="badge badge-<%= task.status %>"><%= task.status %></span></div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Priority</div>
+          <div class="detail-value"><span class="badge badge-priority-<%= task.priority %>"><%= task.priority %></span></div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Assigned To</div>
+          <div class="detail-value" style="display:flex;align-items:center;gap:.5rem;">
+            <% if (task.assignedUser) { %>
+            <div class="user-avatar" style="width:28px;height:28px;font-size:.75rem;"><%= task.assignedUser.name.charAt(0).toUpperCase() %></div>
+            <%= task.assignedUser.name %>
+            <% } else { %>Unassigned<% } %>
+          </div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Project</div>
+          <div class="detail-value">
+            <% if (task.project) { %>
+            <a href="/projects/<%= task.project._id %>" style="color:var(--primary);text-decoration:none;"><%= task.project.name %></a>
+            <% } else { %>—<% } %>
+          </div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Due Date</div>
+          <div class="detail-value"><%= task.dueDate ? new Date(task.dueDate).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}) : 'No due date' %></div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Created</div>
+          <div class="detail-value"><%= new Date(task.createdAt).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}) %></div>
+        </div>
+        <div class="detail-item" style="grid-column:1/-1;">
+          <div class="detail-label">Description</div>
+          <div class="detail-value" style="margin-top:.5rem;padding:.75rem;background:var(--gray-50);border-radius:8px;min-height:60px;">
+            <%= task.description || 'No description provided.' %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h3 class="card-title">Quick Actions</h3></div>
+    <div class="card-body" style="display:flex;flex-direction:column;gap:.6rem;">
+      <% if (canEdit) { %>
+      <a href="/tasks/<%= task._id %>/edit" class="btn btn-warning" style="justify-content:center;">Edit Task</a>
+      <% } %>
+      <% if (locals.currentUser.role === 'admin' || locals.currentUser.role === 'manager') { %>
+      <form action="/tasks/<%= task._id %>?_method=DELETE" method="POST" onsubmit="return confirm('Delete this task permanently?')">
+        <button class="btn btn-danger" style="width:100%;justify-content:center;">Delete Task</button>
+      </form>
+      <% } %>
+      <a href="/tasks" class="btn btn-secondary" style="justify-content:center;">All Tasks</a>
+    </div>
+  </div>
+</div>

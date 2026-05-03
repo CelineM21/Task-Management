@@ -1,0 +1,16 @@
+Team Members:
+- Name: Tatiana Bazouni | ID: 202401016
+- Name: Celine Mansour  | ID: 202400846
+
+GitHub Repository URL:
+- https://github.com/your-username/your-repository
+
+Live Render Deployment URL:
+- https://your-render-service.onrender.com
+
+MongoDB Atlas Connection URI:
+- mongodb+srv://<username>:<password>@<cluster-url>/taskmanagement?retryWrites=true&w=majority
+
+Notes:
+- Add the final production values before submission.
+- Do not commit real credentials to GitHub.

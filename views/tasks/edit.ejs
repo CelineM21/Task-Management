@@ -1,0 +1,107 @@
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Edit Task</h1>
+    <p class="page-subtitle"><%= task.title %></p>
+  </div>
+  <a href="/tasks/<%= task._id %>" class="btn btn-secondary">← Back</a>
+</div>
+
+<div class="form-card">
+  <% if (error) { %>
+  <div class="alert alert-danger">
+    <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+    <%= error %>
+  </div>
+  <% } %>
+
+  <% if (locals.currentUser.role === 'user') { %>
+  <div class="alert alert-warning">
+    <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+    As a user, you can only update the description and status of your tasks.
+  </div>
+  <% } %>
+
+  <form action="/tasks/<%= task._id %>?_method=PUT" method="POST">
+    <div class="form-group">
+      <label class="form-label" for="title">Task Title</label>
+      <input type="text" class="form-control" id="title" name="title" value="<%= task.title %>"
+        <%= locals.currentUser.role === 'user' ? 'readonly' : 'required' %>>
+      <% if (locals.currentUser.role === 'user') { %>
+      <div class="form-hint">Task title cannot be changed.</div>
+      <% } %>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="description">Description</label>
+      <textarea class="form-control" id="description" name="description"><%= task.description %></textarea>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label" for="status">Status</label>
+        <select class="form-control" id="status" name="status">
+          <option value="pending" <%= task.status === 'pending' ? 'selected' : '' %>>Pending</option>
+          <option value="in-progress" <%= task.status === 'in-progress' ? 'selected' : '' %>>In Progress</option>
+          <option value="completed" <%= task.status === 'completed' ? 'selected' : '' %>>Completed</option>
+        </select>
+      </div>
+      <% if (locals.currentUser.role !== 'user') { %>
+      <div class="form-group">
+        <label class="form-label" for="priority">Priority</label>
+        <select class="form-control" id="priority" name="priority">
+          <option value="low" <%= task.priority === 'low' ? 'selected' : '' %>>Low</option>
+          <option value="medium" <%= task.priority === 'medium' ? 'selected' : '' %>>Medium</option>
+          <option value="high" <%= task.priority === 'high' ? 'selected' : '' %>>High</option>
+        </select>
+      </div>
+      <% } %>
+    </div>
+
+    <% if (locals.currentUser.role !== 'user') { %>
+    <div class="form-group">
+      <label class="form-label" for="dueDate">Due Date</label>
+      <input type="date" class="form-control" id="dueDate" name="dueDate"
+        value="<%= task.dueDate ? new Date(task.dueDate).toISOString().split('T')[0] : '' %>">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="assignedUser">Assigned To</label>
+      <select class="form-control" id="assignedUser" name="assignedUser" required>
+        <% users.forEach(user => { %>
+        <option value="<%= user._id %>" <%= task.assignedUser && task.assignedUser._id.toString() === user._id.toString() ? 'selected' : '' %>>
+          <%= user.name %> (<%= user.role %>)
+        </option>
+        <% }); %>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="project">Project</label>
+      <select class="form-control" id="project" name="project" required>
+        <% projects.forEach(project => { %>
+        <option value="<%= project._id %>" <%= task.project && task.project._id.toString() === project._id.toString() ? 'selected' : '' %>>
+          <%= project.name %>
+        </option>
+        <% }); %>
+      </select>
+    </div>
+    <% } else { %>
+    <!-- Hidden fields to preserve values for users -->
+    <input type="hidden" name="assignedUser" value="<%= task.assignedUser._id %>">
+    <input type="hidden" name="project" value="<%= task.project._id %>">
+    <div class="form-group">
+      <label class="form-label">Assigned To</label>
+      <input class="form-control" value="<%= task.assignedUser.name %>" disabled>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Project</label>
+      <input class="form-control" value="<%= task.project.name %>" disabled>
+    </div>
+    <% } %>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Save Changes</button>
+      <a href="/tasks/<%= task._id %>" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>

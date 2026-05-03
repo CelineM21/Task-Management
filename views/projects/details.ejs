@@ -1,0 +1,88 @@
+<div class="page-header">
+  <div>
+    <h1 class="page-title"><%= project.name %></h1>
+    <p class="page-subtitle">Project Details</p>
+  </div>
+  <div style="display:flex;gap:.75rem;">
+    <% if (locals.currentUser.role === 'admin' || locals.currentUser.role === 'manager') { %>
+    <a href="/projects/<%= project._id %>/edit" class="btn btn-warning">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/></svg>
+      Edit Project
+    </a>
+    <% } %>
+    <a href="/projects" class="btn btn-secondary">← Back</a>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;align-items:start;">
+  <div>
+    <div class="card" style="margin-bottom:1.5rem;">
+      <div class="card-header"><h3 class="card-title">Project Info</h3></div>
+      <div class="card-body">
+        <div class="detail-grid">
+          <div class="detail-item">
+            <div class="detail-label">Status</div>
+            <div class="detail-value"><span class="badge badge-<%= project.status %>"><%= project.status %></span></div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Created</div>
+            <div class="detail-value"><%= new Date(project.createdAt).toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'}) %></div>
+          </div>
+          <div class="detail-item" style="grid-column:1/-1;">
+            <div class="detail-label">Description</div>
+            <div class="detail-value"><%= project.description || 'No description provided.' %></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Tasks in this Project</h3>
+        <% if (locals.currentUser.role === 'admin' || locals.currentUser.role === 'manager') { %>
+        <a href="/tasks/new" class="btn btn-sm btn-primary">+ Add Task</a>
+        <% } %>
+      </div>
+      <% if (!tasks || tasks.length === 0) { %>
+      <div class="empty-state">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5z" clip-rule="evenodd"/></svg>
+        <p>No tasks in this project yet.</p>
+      </div>
+      <% } else { %>
+      <table>
+        <thead><tr><th>Task</th><th>Status</th><th>Priority</th><th>Assigned To</th></tr></thead>
+        <tbody>
+          <% tasks.forEach(task => { %>
+          <tr>
+            <td><a href="/tasks/<%= task._id %>" style="color:var(--primary);text-decoration:none;font-weight:500;"><%= task.title %></a></td>
+            <td><span class="badge badge-<%= task.status %>"><%= task.status %></span></td>
+            <td><span class="badge badge-priority-<%= task.priority %>"><%= task.priority %></span></td>
+            <td><%= task.assignedUser ? task.assignedUser.name : '—' %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h3 class="card-title">Members (<%= project.members.filter(Boolean).length %>)</h3></div>
+    <div class="card-body">
+      <% const members = project.members.filter(Boolean); %>
+      <% if (members.length === 0) { %>
+        <p style="color:var(--gray-400);font-size:.875rem;">No members assigned.</p>
+      <% } else { %>
+        <% members.forEach(member => { %>
+        <div style="display:flex;align-items:center;gap:.75rem;padding:.5rem 0;border-bottom:1px solid var(--gray-100);">
+          <div class="user-avatar" style="width:32px;height:32px;font-size:.78rem;"><%= member.name.charAt(0).toUpperCase() %></div>
+          <div>
+            <div style="font-weight:600;font-size:.875rem;"><%= member.name %></div>
+            <div style="font-size:.75rem;color:var(--gray-400);"><%= member.email %></div>
+          </div>
+        </div>
+        <% }); %>
+      <% } %>
+    </div>
+  </div>
+</div>

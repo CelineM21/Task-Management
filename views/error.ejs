@@ -1,0 +1,8 @@
+<div class="error-page">
+  <div>
+    <div class="error-code">!</div>
+    <h1 class="error-title"><%= locals.title || 'Error' %></h1>
+    <p class="error-message"><%= locals.message || 'Something went wrong.' %></p>
+    <a href="<%= locals.backUrl || '/' %>" class="btn btn-primary">Go Back</a>
+  </div>
+</div>

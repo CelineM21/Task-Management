@@ -1,0 +1,53 @@
+<div class="page-header">
+  <div>
+    <h1 class="page-title">User Management</h1>
+    <p class="page-subtitle">Manage system users and roles</p>
+  </div>
+  <a href="/users/new" class="btn btn-primary">
+    <svg viewBox="0 0 20 20" fill="currentColor"><path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"/></svg>
+    Add User
+  </a>
+</div>
+
+<% if (error) { %>
+<div class="alert alert-danger">
+  <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+  <%= error %>
+</div>
+<% } %>
+
+<div class="table-wrapper">
+  <% if (!users || users.length === 0) { %>
+  <div class="empty-state"><p>No users found.</p></div>
+  <% } else { %>
+  <table>
+    <thead>
+      <tr><th>User</th><th>Email</th><th>Role</th><th>Joined</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      <% users.forEach(user => { %>
+      <tr>
+        <td>
+          <div style="display:flex;align-items:center;gap:.75rem;">
+            <div class="user-avatar"><%= user.name.charAt(0).toUpperCase() %></div>
+            <span style="font-weight:600;"><%= user.name %></span>
+          </div>
+        </td>
+        <td style="color:var(--gray-500);"><%= user.email %></td>
+        <td><span class="badge badge-role-<%= user.role %>"><%= user.role %></span></td>
+        <td style="color:var(--gray-500);font-size:.82rem;"><%= new Date(user.createdAt).toLocaleDateString() %></td>
+        <td>
+          <div class="actions-cell">
+            <a href="/users/<%= user._id %>" class="btn btn-sm btn-secondary">View</a>
+            <a href="/users/<%= user._id %>/edit" class="btn btn-sm btn-warning">Edit</a>
+            <form action="/users/<%= user._id %>?_method=DELETE" method="POST" onsubmit="return confirm('Delete this user and all their tasks?')">
+              <button class="btn btn-sm btn-danger">Delete</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
+  <% } %>
+</div>

@@ -1,0 +1,91 @@
+<div class="page-header">
+  <div>
+    <h1 class="page-title">New Task</h1>
+    <p class="page-subtitle">Add a new task to a project</p>
+  </div>
+  <a href="/tasks" class="btn btn-secondary">← Back</a>
+</div>
+
+<div class="form-card">
+  <% if (error) { %>
+  <div class="alert alert-danger">
+    <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+    <%= error %>
+  </div>
+  <% } %>
+
+  <form action="/tasks" method="POST">
+    <div class="form-group">
+      <label class="form-label" for="title">Task Title <span class="required">*</span></label>
+      <% if (locals.currentUser.role === 'user') { %>
+        <input type="text" class="form-control" id="title" name="title" placeholder="e.g. Fix login bug" required>
+        <div class="form-hint">You are creating this task for yourself.</div>
+      <% } else { %>
+        <input type="text" class="form-control" id="title" name="title" placeholder="e.g. Fix login bug" required>
+      <% } %>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="description">Description</label>
+      <textarea class="form-control" id="description" name="description" placeholder="Describe what needs to be done..."></textarea>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label" for="status">Status</label>
+        <select class="form-control" id="status" name="status">
+          <option value="pending">Pending</option>
+          <option value="in-progress">In Progress</option>
+          <option value="completed">Completed</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="priority">Priority</label>
+        <select class="form-control" id="priority" name="priority">
+          <option value="low">Low</option>
+          <option value="medium" selected>Medium</option>
+          <option value="high">High</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="dueDate">Due Date</label>
+      <input type="date" class="form-control" id="dueDate" name="dueDate">
+    </div>
+
+    <% if (locals.currentUser.role !== 'user') { %>
+    <div class="form-group">
+      <label class="form-label" for="assignedUser">Assign To <span class="required">*</span></label>
+      <select class="form-control" id="assignedUser" name="assignedUser" required>
+        <% users.forEach(user => { %>
+        <option value="<%= user._id %>" <%= user._id.toString() === locals.currentUser.id ? 'selected' : '' %>>
+          <%= user.name %> (<%= user.role %>)
+        </option>
+        <% }); %>
+      </select>
+    </div>
+    <% } %>
+
+    <div class="form-group">
+      <label class="form-label" for="project">Project <span class="required">*</span></label>
+      <select class="form-control" id="project" name="project" required>
+        <option value="">Select a project...</option>
+        <% projects.forEach(project => { %>
+        <option value="<%= project._id %>"><%= project.name %></option>
+        <% }); %>
+      </select>
+      <% if (locals.currentUser.role === 'user') { %>
+      <div class="form-hint">Only projects you are a member of are shown.</div>
+      <% } %>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/></svg>
+        Create Task
+      </button>
+      <a href="/tasks" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,38 @@
+{
+  "name": "task-management-system",
+  "version": "1.0.0",
+  "description": "A full-stack web application for task management with authentication and cloud deployment",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "node --test tests/**/*.test.js"
+  },
+  "keywords": [
+    "web",
+    "express",
+    "mongodb",
+    "ejs",
+    "authentication"
+  ],
+  "author": "Student",
+  "license": "ISC",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.4.2",
+    "ejs": "^5.0.2",
+    "express": "^5.2.1",
+    "express-ejs-layouts": "^2.5.1",
+    "express-validator": "^7.3.2",
+    "jsonwebtoken": "^9.0.3",
+    "method-override": "^3.0.0",
+    "mongoose": "^9.5.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}

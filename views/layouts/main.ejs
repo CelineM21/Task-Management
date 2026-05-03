@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= locals.title || 'TaskFlow' %></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+
+<% if (locals.currentUser) { %>
+<!-- Top Navbar -->
+<nav class="top-navbar">
+  <a class="navbar-brand" href="/">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="8" fill="#4f46e5"/>
+      <path d="M8 11h16M8 16h10M8 21h13" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+      <circle cx="24" cy="21" r="3.5" fill="#10b981"/>
+    </svg>
+    TaskFlow
+  </a>
+  <div class="navbar-spacer"></div>
+  <div class="navbar-user">
+    <div class="user-avatar"><%= locals.currentUser.name ? locals.currentUser.name.charAt(0).toUpperCase() : 'U' %></div>
+    <div class="user-info">
+      <div class="user-name"><%= locals.currentUser.name || 'User' %></div>
+      <div class="user-role"><%= locals.currentUser.role %></div>
+    </div>
+    <form action="/auth/logout" method="POST" style="margin:0">
+      <button class="btn-logout" type="submit">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zm7.707 3.293a1 1 0 010 1.414L9.414 9H17a1 1 0 110 2H9.414l1.293 1.293a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+        Logout
+      </button>
+    </form>
+  </div>
+</nav>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-section-label">Main Menu</div>
+  <a href="/tasks" class="sidebar-link">
+    <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/></svg>
+    My Tasks
+  </a>
+  <a href="/projects" class="sidebar-link">
+    <svg viewBox="0 0 20 20" fill="currentColor"><path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/></svg>
+    Projects
+  </a>
+
+  <% if (locals.currentUser.role === 'admin' || locals.currentUser.role === 'manager') { %>
+  <div class="sidebar-section-label">Management</div>
+    <% if (locals.currentUser.role === 'manager' || locals.currentUser.role === 'admin') { %>
+    <a href="/tasks/new" class="sidebar-link">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/></svg>
+      New Task
+    </a>
+    <a href="/projects/new" class="sidebar-link">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/></svg>
+      New Project
+    </a>
+    <% } %>
+  <% } %>
+
+  <% if (locals.currentUser.role === 'admin') { %>
+  <div class="sidebar-section-label">Administration</div>
+  <a href="/users" class="sidebar-link">
+    <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/></svg>
+    Users
+  </a>
+  <a href="/users/new" class="sidebar-link">
+    <svg viewBox="0 0 20 20" fill="currentColor"><path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"/></svg>
+    Add User
+  </a>
+  <% } %>
+</aside>
+
+<!-- Main -->
+<main class="main-content">
+  <div class="page-content">
+    <%- body %>
+  </div>
+  <%- include('../partials/footer') %>
+</main>
+
+<% } else { %>
+<!-- No sidebar for unauthenticated users -->
+<%- body %>
+<% } %>
+
+</body>
+</html>

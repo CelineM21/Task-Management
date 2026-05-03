@@ -1,0 +1,103 @@
+<% if (locals.currentUser) { %>
+<!-- Dashboard for logged in users -->
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-subtitle">Welcome back, <%= locals.currentUser.name %>!</p>
+  </div>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-icon purple">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5z" clip-rule="evenodd"/></svg>
+    </div>
+    <div>
+      <div class="stat-value">—</div>
+      <div class="stat-label">My Tasks</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon blue">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/></svg>
+    </div>
+    <div>
+      <div class="stat-value">—</div>
+      <div class="stat-label">Projects</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon green">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+    </div>
+    <div>
+      <div class="stat-value">—</div>
+      <div class="stat-label">Completed</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon yellow">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg>
+    </div>
+    <div>
+      <div class="stat-value">—</div>
+      <div class="stat-label">In Progress</div>
+    </div>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+  <div class="card">
+    <div class="card-header"><h3 class="card-title">Quick Actions</h3></div>
+    <div class="card-body" style="display:flex;flex-direction:column;gap:.75rem;">
+      <a href="/tasks" class="btn btn-primary">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5z" clip-rule="evenodd"/></svg>
+        View My Tasks
+      </a>
+      <a href="/projects" class="btn btn-secondary">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/></svg>
+        View My Projects
+      </a>
+      <% if (locals.currentUser.role !== 'user') { %>
+      <a href="/tasks/new" class="btn btn-success">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/></svg>
+        Create New Task
+      </a>
+      <% } %>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><h3 class="card-title">Your Role</h3></div>
+    <div class="card-body">
+      <% if (locals.currentUser.role === 'admin') { %>
+        <span class="badge badge-role-admin" style="font-size:.9rem;padding:.4rem 1rem;">👑 Administrator</span>
+        <p style="margin-top:1rem;font-size:.875rem;color:var(--gray-500);">You have full access to all features including user management, project management, and task management.</p>
+      <% } else if (locals.currentUser.role === 'manager') { %>
+        <span class="badge badge-role-manager" style="font-size:.9rem;padding:.4rem 1rem;">🧑‍💼 Manager</span>
+        <p style="margin-top:1rem;font-size:.875rem;color:var(--gray-500);">You can manage all projects and tasks, create and edit records, but cannot access user management.</p>
+      <% } else { %>
+        <span class="badge badge-role-user" style="font-size:.9rem;padding:.4rem 1rem;">👤 User</span>
+        <p style="margin-top:1rem;font-size:.875rem;color:var(--gray-500);">You can view your assigned projects, and edit the status and description of your own tasks.</p>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<% } else { %>
+<!-- Landing hero for guests -->
+<div class="hero">
+  <div>
+    <div style="margin-bottom:1.5rem;">
+      <div style="width:72px;height:72px;border-radius:18px;background:var(--primary);display:inline-flex;align-items:center;justify-content:center;margin-bottom:1rem;">
+        <svg viewBox="0 0 32 32" fill="none" style="width:38px;height:38px;"><path d="M8 11h16M8 16h10M8 21h13" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><circle cx="24" cy="21" r="3.5" fill="#10b981"/></svg>
+      </div>
+    </div>
+    <h1 class="hero-title">Manage Projects &amp; Tasks<br><span>with confidence.</span></h1>
+    <p class="hero-sub">TaskFlow is a role-based project management system. Admins, managers, and users each get exactly the access they need.</p>
+    <div class="hero-actions">
+      <a href="/auth/login" class="btn btn-primary">Login to your account</a>
+      <a href="/auth/register" class="btn btn-secondary">Create account</a>
+    </div>
+  </div>
+</div>
+<% } %>

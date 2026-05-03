@@ -1,0 +1,32 @@
+<div class="page-header">
+  <div>
+    <h1 class="page-title"><%= user.name %></h1>
+    <p class="page-subtitle">User Details</p>
+  </div>
+  <div style="display:flex;gap:.75rem;">
+    <a href="/users/<%= user._id %>/edit" class="btn btn-warning">Edit</a>
+    <a href="/users" class="btn btn-secondary">← Back</a>
+  </div>
+</div>
+
+<div class="card" style="max-width:480px;">
+  <div class="card-body">
+    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;">
+      <div class="user-avatar" style="width:56px;height:56px;font-size:1.4rem;"><%= user.name.charAt(0).toUpperCase() %></div>
+      <div>
+        <div style="font-size:1.15rem;font-weight:700;"><%= user.name %></div>
+        <span class="badge badge-role-<%= user.role %>"><%= user.role %></span>
+      </div>
+    </div>
+    <div class="detail-grid">
+      <div class="detail-item">
+        <div class="detail-label">Email</div>
+        <div class="detail-value"><%= user.email %></div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-label">Member Since</div>
+        <div class="detail-value"><%= new Date(user.createdAt).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}) %></div>
+      </div>
+    </div>
+  </div>
+</div>
